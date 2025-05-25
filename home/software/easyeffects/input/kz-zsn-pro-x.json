@@ -1,0 +1,55 @@
+{
+    "input": {
+        "autogain#0": {
+            "bypass": false,
+            "input-gain": 0.0,
+            "maximum-history": 15,
+            "output-gain": 0.0,
+            "reference": "Geometric Mean (MSI)",
+            "silence-threshold": -70.0,
+            "target": -23.0
+        },
+        "blocklist": [],
+        "deesser#0": {
+            "bypass": false,
+            "detection": "RMS",
+            "f1-freq": 6000.0,
+            "f1-level": 0.0,
+            "f2-freq": 4500.0,
+            "f2-level": 12.0,
+            "f2-q": 1.0,
+            "input-gain": 0.0,
+            "laxity": 15,
+            "makeup": 0.0,
+            "mode": "Wide",
+            "output-gain": 0.0,
+            "ratio": 3.0,
+            "sc-listen": false,
+            "threshold": -18.0
+        },
+        "echo_canceller#0": {
+            "bypass": false,
+            "filter-length": 14,
+            "input-gain": 0.0,
+            "near-end-suppression": -70,
+            "output-gain": 0.0,
+            "residual-echo-suppression": -70
+        },
+        "plugins_order": [
+            "rnnoise#0",
+            "deesser#0",
+            "autogain#0",
+            "echo_canceller#0"
+        ],
+        "rnnoise#0": {
+            "bypass": false,
+            "enable-vad": true,
+            "input-gain": 0.0,
+            "model-name": "",
+            "output-gain": 0.0,
+            "release": 20.0,
+            "vad-thres": 29.0,
+            "wet": 0.0
+        }
+    }
+}
