@@ -9,6 +9,7 @@
       ./kernel/latest.nix
       ./_standard.nix
   ];
+  hardware.firmware = [ pkgs.linux-firmware ];
   boot.initrd.availableKernelModules = [ "nvme" "ehci_pci" "xhci_pci" "usbhid" "uas" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" "dm_mod" "cryptd" "nvme" ];
   boot.kernelModules = [ "dm-snapshot"  "thinkpad-acpi" "kvm-amd" ];
   boot.kernelParams = [ "thinkpad_acpi.fan_control=1" "boot.shell_on_fail" ];
@@ -79,7 +80,7 @@ ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sy
     }
   ];
   networking.useDHCP = lib.mkDefault true;
-  networking.hostName = "thinkpad";
+  networking.hostName = "thinkprime";
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
