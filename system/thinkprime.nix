@@ -1,6 +1,5 @@
 { config, lib, pkgs, nixpkgs, ...}: {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;  
   imports = [
       ./amd/ryzen.nix
       ./amd/amdgpu.nix

@@ -24,7 +24,7 @@ in {
 #    ./session/hyprland.nix
     ./software/alacritty.nix
   ];
-  home.packages = with pkgs; (config.sway.home.packages or []) ++ (config.alacritty.home.packages or []) ++ [
+  home.packages = with pkgs; [
     vlc
     tree
     neofetch
