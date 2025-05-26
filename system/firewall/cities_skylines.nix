@@ -1,6 +1,8 @@
 {config, lib, pkgs, ...}: {
-  allowedUDPPorts = [
-    # Cities skylines
-    4230
-  ];
+  networking.firewall = {
+    allowedUDPPorts = [
+      # Cities skylines
+      4230
+    ];
+  };
 }

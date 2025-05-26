@@ -1,12 +1,11 @@
-{ config, lib, pkgs, nixpkgs-unstable, nixpkgs, ...}: {
+{ config, lib, pkgs, nixpkgs, ...}: {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;  
-  nixpkgs-unstable.config.allowUnfree = true;  
-  import = [
+  imports = [
       ./amd/ryzen.nix
       ./amd/amdgpu.nix
       ./boot/btrfs.nix
-      ./boot/initrd_systemd.nix
+      ./boot/initrd-systemd.nix
       ./boot/systemd-boot.nix
       ./kernel/latest.nix
       ./_standard.nix

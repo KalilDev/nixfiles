@@ -1,14 +1,11 @@
-{ config, lib, pkgs, nixpkgs-unstable, nixpkgs, ...}: {
+{ config, lib, pkgs, nixpkgs, ...}: {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;  
-  nixpkgs-unstable.config.allowUnfree = true;  
-  import = [
-      (modulesPath + "/profiles/qemu-guest.nix")
-      ./boot/btrfs.nix
-      ./boot/initrd_systemd.nix
-      ./boot/systemd-boot.nix
-      ./kernel/latest.nix
-      ./_standard.nix
+  imports = [
+    ./boot/btrfs.nix
+    ./boot/initrd-systemd.nix
+    ./boot/systemd-boot.nix
+    ./kernel/latest.nix
+    ./_qemu_guest.nix
   ];
   boot.kernelParams = [ "boot.shell_on_fail" ];
   boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];

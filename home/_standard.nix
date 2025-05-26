@@ -1,4 +1,4 @@
-{config, lib, pkgs, nixpkgs-unstable, ...}:
+{config, lib, pkgs, ...}:
 let
   # Define the JetBrains gateway environment
   # Issue https://github.com/NixOS/nixpkgs/issues/375254
@@ -19,27 +19,27 @@ let
   };
 in {
   imports = [
-    ./easyeffects.nix
-    ./sway.nix
-#    ./hyprland.nix
-    ./alacritty.nix
+    ./software/easyeffects.nix
+    ./session/sway.nix
+#    ./session/hyprland.nix
+    ./software/alacritty.nix
   ];
   home.packages = with pkgs; (config.sway.home.packages or []) ++ (config.alacritty.home.packages or []) ++ [
     vlc
     tree
     neofetch
-    nixpkgs-unstable.pwvucontrol
+    pwvucontrol
     go
     qbittorrent
-    fira-code
-    fira-code-symbols
+    # fira-code
+    # fira-code-symbols
     font-awesome
-    liberation_ttf
-    mplus-outline-fonts.githubRelease
-    nerdfonts
+    # liberation_ttf
+    # mplus-outline-fonts.githubRelease
+    # nerdfonts
     noto-fonts
     noto-fonts-emoji
-    proggyfonts
+    # proggyfonts
     htop
     killall
     nautilus

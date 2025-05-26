@@ -1,4 +1,4 @@
-{config, lib, pkgs, nixpkgs-unstable, ...}: {
+{config, lib, pkgs, ...}: {
   imports = [
   ];
   config =
@@ -44,7 +44,7 @@
       xwayland.enable = true;
       systemd.enable = true;
       systemd.enableXdgAutostart = true;
-      package = nixpkgs-unstable.hyprland;
+      package = hyprland;
       settings = lib.mkOptionDefault {
         experimental = {
           xx_color_management_v4 = true;

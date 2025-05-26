@@ -1,11 +1,11 @@
-{config, lib, pkgs, nixpkgs-unstable, ...}: {
-  environment.systemPackages = [
+{config, lib, pkgs, ...}: {
+  environment.systemPackages = with pkgs; [
     # Firefox pwa
-    nixpkgs-unstable.firefoxpwa
+    firefoxpwa
   ];
   programs.firefox = {
     enable = true;
-    nativeMessagingHosts.packages = [ nixpkgs-unstable.firefoxpwa ];
+    nativeMessagingHosts.packages = with pkgs; [ firefoxpwa ];
   };
 
 }

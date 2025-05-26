@@ -1,10 +1,9 @@
 {config, lib, pkgs, ...}: {
-    import = [
+    imports = [
         ./etc/appimage.nix
         ./etc/firewall.nix
         ./etc/gaming.nix
         ./etc/i18n.nix
-        ./etc/nix.nix
         ./etc/ssh.nix
         ./firewall/cities_skylines.nix
         ./firewall/kde_connect.nix
@@ -24,5 +23,5 @@
         ./software/zsh.nix
         ./virtualisation/docker.nix
         ./virtualisation/virtd.nix
-    ]
+    ];
 }
