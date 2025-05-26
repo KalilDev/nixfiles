@@ -62,6 +62,12 @@ ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sy
     options = [ "subvol=@home" "compress=zstd" ];
   };
 
+  fileSystems."/flake" = {
+    device = "/dev/vg_wd_blue_luks/root";
+    fsType = "btrfs";
+    options = [ "subvol=@flake" "compress=zstd" ];
+  };
+
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-uuid/4D99-5856";
     fsType = "vfat";
