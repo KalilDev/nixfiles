@@ -17,12 +17,27 @@
         system = "x86_64-linux";
         modules = [
           ./system/thinkprime.nix
-          "./system/users/thinkprime@pedro.nix"
+          "./system/users/pedro@thinkprime.nix"
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.pedro = import "./home/pedro@thinkprime.nix";
+          }
+        ];
+        specialArgs = { inherit home-manager nixpkgs-unstable; };
+      };
+
+      virtualmachine = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./system/virtualmachine.nix
+          "./system/users/pedro@virtualmachine.nix"
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.pedro = import "./home/pedro@virtualmachine.nix";
           }
         ];
         specialArgs = { inherit home-manager nixpkgs-unstable; };
