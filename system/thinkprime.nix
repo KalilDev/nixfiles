@@ -10,8 +10,7 @@
       ./_standard.nix
   ];
   boot.initrd.availableKernelModules = [ "nvme" "ehci_pci" "xhci_pci" "usbhid" "uas" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" "dm_mod" "cryptd" "nvme" ];
-  boot.kernelModules = [  "dm-snapshot"  "thinkpad-acpi" ];
-  boot.kernelModules = [ "kvm-amd"];
+  boot.kernelModules = [ "dm-snapshot"  "thinkpad-acpi" "kvm-amd" ];
   boot.kernelParams = [ "thinkpad_acpi.fan_control=1" "boot.shell_on_fail" ];
   boot.resumeDevice = "/dev/vg_wd_blue_luks/swap";
   boot.initrd.luks.devices."wd_blue_luks" = {
