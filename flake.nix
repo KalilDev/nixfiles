@@ -9,9 +9,12 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprland-session = {
+      url = "path:./hyprland-session";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, home-manager, nixpkgs-9e1f33, ... }: {
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, home-manager, nixpkgs-9e1f33, hyprland-session, ... }: {
     nixosConfigurations = let
       overlays = [
         (final: prev: {
@@ -35,6 +38,7 @@
               config.allowUnfree = true;
             };
           })
+          hyprland-session.nixosModules.shared
           ./system/thinkprime.nix
           ./system/users/pedro-thinkprime.nix
           home-manager.nixosModules.home-manager
@@ -42,6 +46,9 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.pedro = import ./home/pedro-thinkprime.nix;
+            home-manager.sharedModules = [
+              hyprland-session.homeManagerModules.shared
+            ];
           }
         ];
         specialArgs = { inherit inputs; inherit home-manager; };
@@ -56,6 +63,7 @@
               config.allowUnfree = true;
             };
           })
+          hyprland-session.nixosModules.shared
           ./system/virtualmachine.nix
           ./system/users/pedro-virtualmachine.nix
           home-manager.nixosModules.home-manager
@@ -63,6 +71,9 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.pedro = import ./home/pedro-virtualmachine.nix;
+            home-manager.sharedModules = [
+              hyprland-session.homeManagerModules.shared
+            ];
           }
         ];
         specialArgs = { inherit inputs; inherit home-manager; };
