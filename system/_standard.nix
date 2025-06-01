@@ -14,6 +14,7 @@
         ./hardware/pipewire.nix
         ./hardware/upower.nix
         ./session/sway.nix
+        ./session/hyprland.nix
         ./software/firefox.nix
         ./software/greetd.nix
         ./software/lutris.nix

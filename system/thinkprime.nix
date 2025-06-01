@@ -6,6 +6,7 @@
       ./boot/btrfs.nix
       ./boot/initrd-systemd.nix
       ./boot/systemd-boot.nix
+      ./boot/plymouth.nix
       ./kernel/latest.nix
       ./_standard.nix
   ];
@@ -20,7 +21,7 @@
     keyFile = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
     keyFileOffset = 15376280064;
     keyFileSize = 4096;
-    keyFileTimeout = 5;
+    keyFileTimeout = 15;
   };
 
   # workaround for t14 backlight  

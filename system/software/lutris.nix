@@ -3,7 +3,7 @@
     (lutris.override {
        extraPkgs = pkgs: [
          mangohud
-         gamescope
+         pkgs.pin-9e1f33.gamescope
        ];
     })
   ]);

@@ -13,6 +13,7 @@ programs.waybar = {
         spacing = 8;
         modules-left = [
             "sway/workspaces"
+            "hyprland/workspaces"
             "sway/mode"
             "sway/scratchpad"
             "clock"
@@ -58,6 +59,16 @@ programs.waybar = {
                 focused = "";
                 default = "";
             };
+        };
+        "hyprland/workspaces" = {
+            disable-scroll = true;
+            all-outputs = false;
+            format = " {icon} {name} ";
+            format-icons = {
+                urgent = "";
+                focused = "";
+                default = "";
+           };
         };
         "sway/mode" = {
             format = "<span style=\"italic\">{}</span>";

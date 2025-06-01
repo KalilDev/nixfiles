@@ -21,7 +21,7 @@ in {
   imports = [
     ./software/easyeffects.nix
     ./session/sway.nix
-#    ./session/hyprland.nix
+    ./session/hyprland.nix
     ./software/alacritty.nix
   ];
   home.packages = with pkgs; [

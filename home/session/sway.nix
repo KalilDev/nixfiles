@@ -10,7 +10,24 @@
     swaybg
     playerctl
     brightnessctl
+    kanshi
   ];
+  xdg.configFile."kanshi/kanshi.conf".text = "";
+  systemd.user.services.kanshi-sway = {
+    Unit = {
+      Description = "kanshi daemon for sway session";
+      WantedBy = "sway-session.target";
+      Wants = "sway-session.target";
+      After = "sway-session.target";
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.kanshi}/bin/kanshi -c ${config.xdg.configHome}/kanshi/kanshi.conf";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+    };
+  };
   wayland.windowManager.sway = {
     enable = true;
     xwayland = true;

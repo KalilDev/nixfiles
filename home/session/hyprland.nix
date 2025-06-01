@@ -1,8 +1,15 @@
 {config, lib, pkgs, ...}: 
   let
     super = "SUPER";
+    mod = super;
+    mod_shift = "SUPER_SHIFT";
+    left = "left";
+    right = "right";
+    up = "up";
+    down = "down";
   in {
   imports = [
+    ./sway/waybar.nix
   ];
   home.packages = with pkgs; [
     playerctl
@@ -28,45 +35,132 @@
         [ darkBg lightBg ];
 
       wallpaper = [
-        darkBg
+        ", ${darkBg}"
       ];        
     };
   };
-  services.hypridle = {
-    enable = true;
-  };
-  programs.hyprlock = {
-    enable = true;
-  };
+ services.hypridle = {
+   enable = true;
+   settings = {
+     general = {
+       after_sleep_cmd = "hyprctl dispatch dpms on";
+       ignore_dbus_inhibit = false;
+       lock_cmd = "hyprlock";
+     };
+     listener = [
+       {
+         timeout = 900;
+         on-timeout = "hyprlock";
+       }
+       {
+         timeout = 1200;
+         on-timeout = "hyprctl dispatch dpms off";
+         on-resume = "hyprctl dispatch dpms on";
+       }
+     ];
+   };
+ };
+ programs.hyprlock = {
+   enable = true;
+   settings = {
+     general = {
+       disable_loading_bar = true;
+       grace = 300;
+       hide_cursor = true;
+       no_fade_in = false;
+     };
+
+     background = [
+       {
+         path = "screenshot";
+         blur_passes = 3;
+         blur_size = 8;
+       }
+     ];
+     input-field = [
+       {
+         size = "200, 50";
+         position = "0, -80";
+         monitor = "";
+         dots_center = true;
+         fade_on_empty = false;
+         font_color = "rgb(202, 211, 245)";
+         inner_color = "rgb(91, 96, 120)";
+         outer_color = "rgb(24, 25, 38)";
+         outline_thickness = 5;
+         placeholder_text = ''<span foreground="##cad3f5">Password...</span>'';
+         shadow_passes = 2;
+       }
+     ];
+   };
+ };
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
     systemd.enable = true;
     systemd.enableXdgAutostart = true;
-    package = hyprland;
-    settings = lib.mkOptionDefault {
+    package = pkgs.hyprland;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
+    settings = {
+      "$mod" = mod;
       experimental = {
         xx_color_management_v4 = true;
       };
+      monitor = [
+        "desc:LG Electronics LG ULTRAGEAR 502AZPU32496, 2560x1440@164.96Hz, 0x0, 1, bitdepth, 10, cm, hdredid, sdrbrightness, 1.15, sdrsaturation, 0.75"
+      ];
+      exec-once = [
+        "waybar"
+      ];
       "debug:disable_logs" = false;
-    };
+      bindm = [
+        "${mod}, mouse:272, movewindow"
+      ];
+      bind = [
+        "${mod}, Return, exec, alacritty"
+        "${mod}, D, exec, rofi -modes drun -show drun"
+        "${mod}, ${left}, movefocus, l"
+        "${mod}, ${right}, movefocus, r"
+        "${mod}, ${up}, movefocus, u"
+        "${mod}, ${down}, movefocus, d"
+        "${mod_shift}, ${left}, movewindow, l"
+        "${mod_shift}, ${right}, movewindow, r"
+        "${mod_shift}, ${up}, movewindow, u"
+        "${mod_shift}, ${down}, movewindow, d"
+        "${mod_shift}, Q, killactive"
+        "${mod_shift}, space, togglefloating"
+        "${mod}, F, fullscreen"
+      ]
+      ++ (
+        # workspaces
+        # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
+        builtins.concatLists (builtins.genList (i:
+            let ws = i + 1;
+            in [
+              "$mod, code:1${toString i}, workspace, ${toString ws}"
+              "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+            ]
+          )
+          9)
+      );
+      env = [
+        "_JAVA_AWT_WM_NONREPARENTING, 1"
+        "GDK_BACKEND, wayland,x11,*"
+        "QT_QPA_PLATFORM, wayland-egl;wayland;xcb"
+        "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
+        #env = QT_QPA_PLATFORMTHEME,qt5ct
+        "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
+        "ECORE_EVAS_ENGINE, wayland_egl"
+        "ELM_ENGINE, wayland_egl"
+        "SDL_VIDEODRIVER, wayland"
+        "CLUTTER_BACKEND, wayland"
+        "XDG_CURRENT_DESKTOP, Hyprland"
+        "XDG_SESSION_TYPE, wayland"
+        "XDG_SESSION_DESKTOP, Hyprland"
 #export QT_WAYLAND_FORCE_DPI=physical
+      ];
+    };
     extraConfig = ''
-      env = _JAVA_AWT_WM_NONREPARENTING,1
-      env = GDK_BACKEND,wayland,x11,*
-      env = QT_QPA_PLATFORM,wayland-egl;wayland;xcb
-      env = QT_AUTO_SCREEN_SCALE_FACTOR,1
-      #env = QT_QPA_PLATFORMTHEME,qt5ct
-      env = QT_WAYLAND_DISABLE_WINDOWDECORATION,1
-      env = ECORE_EVAS_ENGINE,wayland_egl
-      env = ELM_ENGINE,wayland_egl
-      env = SDL_VIDEODRIVER,wayland
-      env = CLUTTER_BACKEND,wayland
-
-      env = XDG_CURRENT_DESKTOP,Hyprland
-      env = XDG_SESSION_TYPE,wayland
-      env = XDG_SESSION_DESKTOP,Hyprland
-
 
       # Monitor (adjust as needed)
       monitor=,preferred,auto,1
@@ -105,28 +199,6 @@
       }
 
       # Keybindings
-      bind = ${super}, Return, exec, "alacritty"
-      bind = ${super}, Q, killactive
-      bind = ${super}, D, exec, "rofi -modes drun -show drun"
-
-      bind = ${super}, H, movefocus, l
-      bind = ${super}, L, movefocus, r
-      bind = ${super}, K, movefocus, u
-      bind = ${super}, J, movefocus, d
-
-      bind = ${super} SHIFT, H, movewindow, l
-      bind = ${super} SHIFT, L, movewindow, r
-      bind = ${super} SHIFT, K, movewindow, u
-      bind = ${super} SHIFT, J, movewindow, d
-
-      bind = ${super}, S, togglefloating
-      bind = ${super}, F, fullscreen
-
-      bind = ${super}, 1, workspace, 1
-      bind = ${super} SHIFT, 1, movetoworkspace, 1
-      bind = ${super}, 2, workspace, 2
-      bind = ${super} SHIFT, 2, movetoworkspace, 2
-      # ... repeat for 3-10
 
       bind = ,XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%
       bind = ,XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%

@@ -4,17 +4,23 @@
   inputs = {
     nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs-9e1f33.url = "github:nixos/nixpkgs/9e1f33d1c971ba85d7f51338bbfd7ceefb07e7c8";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, home-manager, ... }: {
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, home-manager, nixpkgs-9e1f33, ... }: {
     nixosConfigurations = let
       overlays = [
         (final: prev: {
           stable = import nixpkgs-stable {
+            inherit (final) system;
+            config.allowUnfree = true;
+          };
+          pin-9e1f33 = import nixpkgs-9e1f33 {
+            inherit (final) system;
             config.allowUnfree = true;
           };
         })
