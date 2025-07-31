@@ -48,13 +48,17 @@ in {
     discord
     jetbrains.jdk
     jetbrains.clion
-    gateway-fix-client
+    jetbrains.gateway
+    # (pkgs.upstream-de09e1.jetbrains.gateway.overrideAttrs {
+    #   extraBuildInputs = [ glib ];
+    # })
     jetbrains.ruby-mine
     jetbrains.rust-rover
     jetbrains.goland
     jetbrains.pycharm-professional
     scrcpy
     stremio
+    musescore
   ];
   home.sessionVariables = rec {
     XDG_DESKTOP_DIR = "$HOME/Desktop";
@@ -80,10 +84,10 @@ in {
   home.stateVersion = "24.11";
   xdg.portal = {
     enable = true;
-    config.common.default = ["wlr"];
-    extraPortals = [
-      pkgs.xdg-desktop-portal-wlr
-    ];
+#    config.common.default = ["wlr"];
+#    extraPortals = [
+#      pkgs.xdg-desktop-portal-wlr
+#    ];
   };
   programs.zsh = {
     enable = true;

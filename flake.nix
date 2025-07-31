@@ -18,6 +18,42 @@
     nixosConfigurations = let
       overlays = [
         (final: prev: {
+          jetbrains = prev.jetbrains // {
+            gateway = let
+              unwrapped = prev.jetbrains.gateway;
+              wrapperName = "gateway";
+              desktopItem = prev.makeDesktopItem {
+                name = "jetbrains-gateway";
+                exec = wrapperName; # This must match the name of the wrapper script in `buildFHSEnv`
+                icon = "${unwrapped}/share/icons/hicolor/256x256/apps/jetbrains-gateway.png"; # adjust if needed
+                comment = "JetBrains Gateway";
+                desktopName = "JetBrains Gateway";
+                categories = [ "Development" "IDE" ];
+                terminal = false;
+              };
+            in prev.buildFHSEnv {
+              name = wrapperName;
+              inherit (unwrapped) version;
+
+              runScript = prev.writeScript "gateway-wrapper" ''
+                unset JETBRAINS_CLIENT_JDK
+                exec ${unwrapped}/bin/gateway "$@"
+              '';
+
+              meta = unwrapped.meta;
+
+              passthru = {
+                inherit unwrapped;
+              };
+
+              extraInstallCommands = ''
+                mkdir -p $out/share/applications
+                cp ${desktopItem}/share/applications/* $out/share/applications/
+              '';
+            };
+          };
+        })
+        (final: prev: {
           stable = import nixpkgs-stable {
             inherit (final) system;
             config.allowUnfree = true;
