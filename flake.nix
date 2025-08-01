@@ -5,6 +5,7 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nixpkgs-9e1f33.url = "github:nixos/nixpkgs/9e1f33d1c971ba85d7f51338bbfd7ceefb07e7c8";
+    nixpkgs-8b31d5.url = "github:nixos/nixpkgs/8b31d5da6d7f3792c69cdabeafdba7739744d1bb";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,7 +15,7 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, home-manager, nixpkgs-9e1f33, hyprland-session, ... }: {
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, home-manager, nixpkgs-9e1f33, hyprland-session, nixpkgs-8b31d5, ... }: {
     nixosConfigurations = let
       overlays = [
         (final: prev: {
@@ -59,6 +60,10 @@
             config.allowUnfree = true;
           };
           pin-9e1f33 = import nixpkgs-9e1f33 {
+            inherit (final) system;
+            config.allowUnfree = true;
+          };
+          pin-8b31d5 = import nixpkgs-8b31d5 {
             inherit (final) system;
             config.allowUnfree = true;
           };
