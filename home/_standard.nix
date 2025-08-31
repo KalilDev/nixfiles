@@ -58,7 +58,8 @@ in {
     jetbrains.pycharm-professional
     scrcpy
     stremio
-    pin-8b31d5.musescore
+    musescore
+    jq
   ];
   home.sessionVariables = rec {
     XDG_DESKTOP_DIR = "$HOME/Desktop";
