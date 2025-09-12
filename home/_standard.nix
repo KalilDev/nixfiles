@@ -60,6 +60,7 @@ in {
     stremio
     musescore
     jq
+    loupe
   ];
   home.sessionVariables = rec {
     XDG_DESKTOP_DIR = "$HOME/Desktop";
@@ -111,7 +112,7 @@ in {
   services.blueman-applet.enable = true;
   programs.mangohud = {
     enable = true;
-    enableSessionWide = true;
+    enableSessionWide = false;
   };
   
 

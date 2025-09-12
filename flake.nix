@@ -68,6 +68,29 @@
             config.allowUnfree = true;
           };
         })
+	(final: prev: {
+          wlroots_0_20 = prev.wlroots.overrideAttrs (old: {
+            version = "0.20.0";
+            src = prev.fetchFromGitLab {
+              domain = "gitlab.freedesktop.org";
+              owner = "wlroots";
+              repo = "wlroots";
+              rev = "0166fd9eb778761295ea14fdff0515ada1a1cb17";
+              sha256 = "sha256-2FK6FGRpgf/YYqwJST0LVA/pnNRSUDrfrrp6mSwA0Fk=";
+            };
+          });
+	})
+	(final: prev: {
+	  sway-unwrapped = prev.sway-unwrapped.overrideAttrs (oldAttrs: {
+            src = prev.fetchFromGitHub {
+              owner = "swaywm";
+              repo = "sway";
+              rev = "73c244fb4807a29c6599d42c15e8a8759225b2d6";
+              sha256 = "sha256-P2w1oRVUNBWajt8jZOxPXvBE29urbrhtORy+lfYqnF8=";
+            };
+	    buildInputs = (prev.lib.filter (dep: dep.name != "wlroots") oldAttrs.buildInputs) ++ [ prev.wlroots_0_20 ];
+          });
+	})
       ];
     in {
       thinkprime = nixpkgs.lib.nixosSystem {

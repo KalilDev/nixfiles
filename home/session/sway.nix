@@ -50,6 +50,8 @@ client.unfocused         "#151515"   "#151515"   "#999999"   "#999999"   "#15151
 #client.placeholder      "#2E344000" "#2E344000" "#2E344000" "#2E344000" "#2E344000"
 '';
     extraSessionCommands = ''
+# Hack! dont use vulkan wlr renderer on nix builder
+test "$XDG_SESSION_TYPE" = "wayland" && export WLR_RENDERER=vulkan
 export _JAVA_AWT_WM_NONREPARENTING=1
 export QT_QPA_PLATFORM=wayland-egl
 #export QT_WAYLAND_FORCE_DPI=physical
@@ -130,6 +132,12 @@ esac
           "${super}+Escape" = "mode default";
           "${super}+G" = "mode default";
         };
+      };
+      output = {
+        "HDMI-A-1" = {
+	  render_bit_depth = "10";
+	  hdr = "on";
+	};
       };
       left = "h";
       down = "j";
