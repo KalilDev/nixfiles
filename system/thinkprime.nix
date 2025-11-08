@@ -7,7 +7,7 @@
       ./boot/initrd-systemd.nix
       ./boot/systemd-boot.nix
       ./boot/plymouth.nix
-      ./kernel/latest.nix
+      # ./kernel/latest.nix <- musnix defines a rt kernel
       ./_standard.nix
   ];
   hardware.firmware = [ pkgs.linux-firmware ];

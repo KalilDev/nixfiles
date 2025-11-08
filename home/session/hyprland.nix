@@ -12,7 +12,7 @@
       sha256 = "fcf32cd741148c3874ca514fe04b28038888acdb703fbf68cf5478fe2fae83dd";
   };
   in {
-    enable = true;
+    enable = false;
     bar.command = "waybar";
     background = darkBg;
   };

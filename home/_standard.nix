@@ -59,6 +59,8 @@ in {
     scrcpy
     stremio
     musescore
+    ardour
+    audacity
     jq
     loupe
   ];
@@ -86,10 +88,10 @@ in {
   home.stateVersion = "24.11";
   xdg.portal = {
     enable = true;
-#    config.common.default = ["wlr"];
-#    extraPortals = [
-#      pkgs.xdg-desktop-portal-wlr
-#    ];
+    config.common.default = ["wlr"];
+    extraPortals = [
+      pkgs.xdg-desktop-portal-wlr
+    ];
   };
   programs.zsh = {
     enable = true;

@@ -10,12 +10,15 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    musnix = {
+      url = "github:musnix/musnix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     hyprland-session = {
       url = "path:./hyprland-session";
     };
   };
-
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, home-manager, nixpkgs-9e1f33, hyprland-session, nixpkgs-8b31d5, ... }: {
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, hyprland-session, nixpkgs-8b31d5, ... }: {
     nixosConfigurations = let
       overlays = [
         (final: prev: {
@@ -105,6 +108,8 @@
           hyprland-session.nixosModules.shared
           ./system/thinkprime.nix
           ./system/users/pedro-thinkprime.nix
+          musnix.nixosModules.musnix
+          ./system-musnix/thinkprime.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

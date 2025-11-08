@@ -14,10 +14,10 @@
   };
   xdg.portal = {
     enable = true;
-#    config.common.default = ["wlr"];
-#    extraPortals = [
-#      pkgs.xdg-desktop-portal-wlr
-#    ];
+    config.common.default = ["wlr"];
+    extraPortals = [
+      pkgs.xdg-desktop-portal-wlr
+    ];
   };
   environment.systemPackages = (with pkgs; [
     grim
