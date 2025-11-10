@@ -38,7 +38,7 @@ in {
     # mplus-outline-fonts.githubRelease
     # nerdfonts
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     # proggyfonts
     htop
     killall
@@ -61,8 +61,14 @@ in {
     musescore
     ardour
     audacity
+    qpwgraph
     jq
     loupe
+    wineWowPackages.waylandFull
+    yabridge
+    yabridgectl
+    # VST
+    noise-repellent
   ];
   home.sessionVariables = rec {
     XDG_DESKTOP_DIR = "$HOME/Desktop";
@@ -81,8 +87,8 @@ in {
   programs.home-manager.enable = true;
   programs.git = {
     enable = true;
-    userName = "KalilDev";
-    userEmail = "KalilDev@users.noreply.github.com";
+    settings.user.name = "KalilDev";
+    settings.user.email = "KalilDev@users.noreply.github.com";
     package = pkgs.gitFull;
   };
   home.stateVersion = "24.11";
@@ -108,7 +114,7 @@ in {
   };
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    package = pkgs.rofi; # was rofi-wayland
   };
   services.kdeconnect.enable = true;
   services.blueman-applet.enable = true;
@@ -120,7 +126,7 @@ in {
 
   programs.vscode = {
     enable = true;
-    extensions = with pkgs.vscode-extensions; [
+    profiles.default.extensions = with pkgs.vscode-extensions; [
      dart-code.dart-code
      dart-code.flutter
      ms-azuretools.vscode-docker

@@ -1,4 +1,4 @@
-{config, lib, pkgs, ...}: {
+{config, lib, pkgs, nixpkgs, ...}: {
   # Sway
   programs.sway = {
     enable = true;
@@ -7,6 +7,10 @@
   security.polkit.enable = true;
   security.rtkit.enable = true;
   programs.dconf.enable = true;
+  # Fontconfig depends on qt5 and qtwebengine5...
+  nixpkgs.config.permittedInsecurePackages = [
+    "qtwebengine-5.15.19"
+  ];
   fonts.fontconfig.enable = true;
   programs.gnupg.agent = {
     enable = true;

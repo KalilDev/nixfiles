@@ -20,7 +20,7 @@ programs.waybar = {
             "cpu"
             "memory"
             "temperature"
-    "custom/power_consumption"
+    "custom/tdp"
             "power-profiles-daemon"
         ];
         modules-center = [
@@ -31,6 +31,7 @@ programs.waybar = {
             "pulseaudio"
             "network"
             "battery"
+            "custom/battery_consumption"
             "tray"
             "idle_inhibitor"
             "custom/power"
@@ -140,11 +141,17 @@ programs.waybar = {
             on-click = "wlogout";
             tooltip = false;
         };
-        "custom/power_consumption" = {
+        "custom/tdp" = {
             format = "{}w ";
             interval = 3;
             escape = true;
-            exec = "echo \"$(cat \/sys\/class\/hwmon\/hwmon8\/power1_input) \/ 1000000\" | bc -l | sed -E \"s\/^([0-9]+)\\.[0-9].*\/\\1\/g\"";
+            exec = "echo \"$(cat \/sys\/class\/hwmon\/hwmon5\/power1_input) \/ 1000000\" | bc -l | sed -E \"s\/^([0-9]+)\\.[0-9].*\/\\1\/g\"";
+        };
+        "custom/battery_consumption" = {
+            format = "{}w";
+            interval = 3;
+            escape = true;
+            exec = "echo \"$(cat /sys/class/power_supply/BAT0/power_now) / 1000000\" | bc -l | sed -E \"s/^([0-9]+\\.?[0-9]?)[0-9]*/\\1/g\""; 
         };
     };
     style = ''
