@@ -145,7 +145,7 @@ programs.waybar = {
             format = "{}w ";
             interval = 3;
             escape = true;
-            exec = "echo \"$(cat \/sys\/class\/hwmon\/hwmon5\/power1_input) \/ 1000000\" | bc -l | sed -E \"s\/^([0-9]+)\\.[0-9].*\/\\1\/g\"";
+            exec = "echo \"$(cat \/sys\/devices\/pci0000:00\/0000:00:08.1\/0000:08:00.0\/hwmon\/hwmon*\/power1_input) \/ 1000000\" | bc -l | sed -E \"s\/^([0-9]+)\\.[0-9].*\/\\1\/g\"";
         };
         "custom/battery_consumption" = {
             format = "{}w";

@@ -3,6 +3,7 @@
   imports = [
       ./amd/ryzen.nix
       ./amd/amdgpu.nix
+      ./amd/lact.nix
       ./boot/btrfs.nix
       ./boot/initrd-systemd.nix
       ./boot/systemd-boot.nix
@@ -40,7 +41,7 @@ ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sy
     sensors = [
       {
         type = "hwmon";
-        query = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon4/temp1_input";
+        query = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon6/temp1_input";
       }
     ];
     

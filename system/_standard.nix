@@ -7,12 +7,15 @@
         ./etc/ssh.nix
         ./firewall/cities_skylines.nix
         ./firewall/kde_connect.nix
+        ./firewall/tools.nix
+        ./firewall/qbittorrent.nix
         ./hardware/adb.nix
         ./hardware/bluetooth.nix
         ./hardware/libinput.nix
         ./hardware/networkmanager.nix
         ./hardware/pipewire.nix
         ./hardware/upower.nix
+        ./hardware/misc.nix
         ./session/sway.nix
         ./session/hyprland.nix
         ./software/firefox.nix

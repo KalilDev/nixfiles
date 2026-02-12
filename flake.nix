@@ -14,11 +14,11 @@
       url = "github:musnix/musnix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland-session = {
-      url = "path:./hyprland-session";
-    };
+    #hyprland-session = {
+    #  url = "path:./hyprland-session";
+    #};
   };
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, hyprland-session, nixpkgs-8b31d5, ... }: {
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, nixpkgs-8b31d5, ... }: {
     nixosConfigurations = let
       overlays = [
         (final: prev: {
@@ -105,7 +105,7 @@
               config.allowUnfree = true;
             };
           })
-          hyprland-session.nixosModules.shared
+          #hyprland-session.nixosModules.shared
           ./system/thinkprime.nix
           ./system/users/pedro-thinkprime.nix
           musnix.nixosModules.musnix
@@ -116,7 +116,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.pedro = import ./home/pedro-thinkprime.nix;
             home-manager.sharedModules = [
-              hyprland-session.homeManagerModules.shared
+              #hyprland-session.homeManagerModules.shared
             ];
           }
         ];
@@ -132,7 +132,7 @@
               config.allowUnfree = true;
             };
           })
-          hyprland-session.nixosModules.shared
+          #hyprland-session.nixosModules.shared
           ./system/virtualmachine.nix
           ./system/users/pedro-virtualmachine.nix
           home-manager.nixosModules.home-manager
@@ -141,7 +141,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.pedro = import ./home/pedro-virtualmachine.nix;
             home-manager.sharedModules = [
-              hyprland-session.homeManagerModules.shared
+              #hyprland-session.homeManagerModules.shared
             ];
           }
         ];

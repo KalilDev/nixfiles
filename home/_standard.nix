@@ -27,7 +27,7 @@ in {
   home.packages = with pkgs; [
     vlc
     tree
-    neofetch
+    fastfetch
     pwvucontrol
     go
     qbittorrent
@@ -58,12 +58,15 @@ in {
     jetbrains.pycharm-professional
     scrcpy
     stremio
+    jq
+    loupe
+    google-chrome
+    telegram-desktop
+    # Audio
     musescore
     ardour
     audacity
     qpwgraph
-    jq
-    loupe
     wineWowPackages.waylandFull
     yabridge
     yabridgectl

@@ -5,4 +5,10 @@
     extraGroups = [ "adbusers" "docker" "wheel" "network" "steam" "input" "video" ]; # Enable ‘sudo’ for the user.
     shell = pkgs.zsh;
   };
+  security.pam.loginLimits = [{
+    domain = "pedro";
+    type = "hard";
+    item = "nofile";
+    value = "524288";
+  }];
 }
