@@ -59,6 +59,9 @@ export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export ECORE_EVAS_ENGINE=wayland_egl
 export ELM_ENGINE=wayland_egl
 export SDL_VIDEODRIVER=wayland
+export NIXOS_OZONE_WL=1
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
+export XDG_CURRENT_DESKTOP=sway
     '';
     config = rec {
       gaps = {
@@ -135,6 +138,10 @@ esac
       };
       output = {
         "HDMI-A-1" = {
+	  render_bit_depth = "10";
+	  hdr = "on";
+	};
+        "DP-5" = {
 	  render_bit_depth = "10";
 	  hdr = "on";
 	};

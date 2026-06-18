@@ -5,7 +5,10 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nixpkgs-9e1f33.url = "github:nixos/nixpkgs/9e1f33d1c971ba85d7f51338bbfd7ceefb07e7c8";
-    nixpkgs-8b31d5.url = "github:nixos/nixpkgs/8b31d5da6d7f3792c69cdabeafdba7739744d1bb";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,11 +17,8 @@
       url = "github:musnix/musnix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    #hyprland-session = {
-    #  url = "path:./hyprland-session";
-    #};
   };
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, nixpkgs-8b31d5, ... }: {
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, agenix, ... }: {
     nixosConfigurations = let
       overlays = [
         (final: prev: {
@@ -57,19 +57,15 @@
             };
           };
         })
-        (final: prev: {
+        (final: prev: let pin-9e1f33 = import nixpkgs-9e1f33 {
+            inherit (final) system;
+            config.allowUnfree = true;
+          }; in {
           stable = import nixpkgs-stable {
             inherit (final) system;
             config.allowUnfree = true;
           };
-          pin-9e1f33 = import nixpkgs-9e1f33 {
-            inherit (final) system;
-            config.allowUnfree = true;
-          };
-          pin-8b31d5 = import nixpkgs-8b31d5 {
-            inherit (final) system;
-            config.allowUnfree = true;
-          };
+          gamescope = pin-9e1f33.gamescope;
         })
 	(final: prev: {
           wlroots_0_20 = prev.wlroots.overrideAttrs (old: {
@@ -110,12 +106,14 @@
           ./system/users/pedro-thinkprime.nix
           musnix.nixosModules.musnix
           ./system-musnix/thinkprime.nix
+          agenix.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.pedro = import ./home/pedro-thinkprime.nix;
             home-manager.sharedModules = [
+              agenix.homeManagerModules.default
               #hyprland-session.homeManagerModules.shared
             ];
           }

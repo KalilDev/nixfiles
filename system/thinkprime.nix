@@ -4,6 +4,7 @@
       ./amd/ryzen.nix
       ./amd/amdgpu.nix
       ./amd/lact.nix
+      ./hardware/fprintd.nix
       ./boot/btrfs.nix
       ./boot/initrd-systemd.nix
       ./boot/systemd-boot.nix
@@ -11,7 +12,11 @@
       ./kernel/rt_latest.nix
       ./virtualisation/waydroid.nix
       ./_standard.nix
+      ./cloudflare/thinkprime.nix
   ];
+
+  age.secrets.cloudflare_tunnel.file = ../secrets/cloudflare_tunnel.age;
+
   hardware.firmware = [ pkgs.linux-firmware ];
   boot.initrd.availableKernelModules = [ "nvme" "ehci_pci" "xhci_pci" "usbhid" "uas" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" "dm_mod" "cryptd" "nvme" ];
   boot.kernelModules = [ "dm-snapshot"  "thinkpad-acpi" "kvm-amd" ];
@@ -20,10 +25,10 @@
   boot.initrd.luks.devices."wd_blue_luks" = {
     device = "/dev/disk/by-uuid/052a7220-479f-4c53-b6d4-80e3dcaa6c24";
     preLVM = true;
-    keyFile = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
-    keyFileOffset = 15376280064;
-    keyFileSize = 4096;
-    keyFileTimeout = 15;
+    #keyFile = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
+    #keyFileOffset = 15376280064;
+    #keyFileSize = 4096;
+    #keyFileTimeout = 15;
   };
 
   # workaround for t14 backlight  

@@ -3,4 +3,5 @@
   systemd.packages = [pkgs.lact];
   systemd.services.lactd.wantedBy = ["multi-user.target"];
   systemd.services.lactd.enable = true;
+  boot.kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
 }

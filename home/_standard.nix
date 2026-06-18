@@ -23,8 +23,33 @@ in {
     ./session/sway.nix
     ./session/hyprland.nix
     ./software/alacritty.nix
+    ./software/waydroid.nix
+    ./ui/gtk.nix
+    ./ui/qt.nix
   ];
-  home.packages = with pkgs; [
+  custom.waydroid-desktops = {
+    hide = true;
+    whitelist = ["com.songsterr"];
+  };
+  home.packages = with pkgs; [  
+    (pkgs.writeShellScriptBin "nix-shell" ''
+    has_run=0
+
+    for arg in "$@"; do
+      if [[ "$arg" == "--run" || "$arg" == "-r" ]]; then
+        has_run=1
+        break
+      fi
+    done
+
+    if [[ $has_run -eq 1 ]]; then
+      exec ${pkgs.nix}/bin/nix-shell "$@"
+    else
+      exec ${pkgs.nix}/bin/nix-shell --run "''${SHELL:-zsh}" "$@"
+    fi
+  '')
+    (bottles.override {removeWarningPopup = true;})
+    nautilus
     vlc
     tree
     fastfetch
@@ -42,7 +67,6 @@ in {
     # proggyfonts
     htop
     killall
-    nautilus
     ghidra-bin
     gparted
     discord
@@ -55,6 +79,7 @@ in {
     jetbrains.ruby-mine
     jetbrains.rust-rover
     jetbrains.goland
+    jetbrains.datagrip
     jetbrains.pycharm-professional
     scrcpy
     stremio
@@ -62,6 +87,8 @@ in {
     loupe
     google-chrome
     telegram-desktop
+    wf-recorder
+    ffmpeg
     # Audio
     musescore
     ardour
@@ -70,10 +97,43 @@ in {
     wineWowPackages.waylandFull
     yabridge
     yabridgectl
+    reaper
     # VST
     noise-repellent
+    # Music player
+    gapless
+    # Utils
+    gimp
+    python3
+    cloc
+    qpdf
+    zip
+    unzip
+    unrar
+    strace
+    usbutils
+    protonup-ng
+    protonup-qt
+    pciutils
+    pdfarranger
+    kdePackages.okular
+    gnome-text-editor
+    obs-studio
+    nmap
+    mpv
+    loupe
+    inkscape
+    jq
+    glib
+    p7zip
+    bc
+    binutils
   ];
   home.sessionVariables = rec {
+    EDITOR = "${pkgs.vim}/bin/vim";
+  };
+  systemd.user.sessionVariables = rec {
+    EDITOR = "${pkgs.vim}/bin/vim";
     XDG_DESKTOP_DIR = "$HOME/Desktop";
     XDG_DOWNLOAD_DIR = "$HOME/Downloads";
     XDG_DOCUMENTS_DIR = "$HOME/Documents";
@@ -87,6 +147,7 @@ in {
     XDG_BIN_HOME = "$HOME/.local/bin";
     PATH = "$PATH:$HOME/.local/bin";
   };
+
   programs.home-manager.enable = true;
   programs.git = {
     enable = true;
@@ -104,6 +165,10 @@ in {
   };
   programs.zsh = {
     enable = true;
+    history = {
+      append = true;
+      share = false;
+    };
     oh-my-zsh = {
       enable = true;
       plugins = [];
@@ -125,6 +190,7 @@ in {
     enable = true;
     enableSessionWide = false;
   };
+  
   
 
   programs.vscode = {
