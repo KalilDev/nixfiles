@@ -2,15 +2,15 @@
   description = "Home-Manager + nixos flake";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs-stable.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-26.05-chilled/0.1.1005841";
+    nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.1.1012902";
     nixpkgs-9e1f33.url = "github:nixos/nixpkgs/9e1f33d1c971ba85d7f51338bbfd7ceefb07e7c8";
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/master";
+      url = "https://flakehub.com/f/nix-community/home-manager/0.2605.6814";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     musnix = {
@@ -65,31 +65,38 @@
             inherit (final) system;
             config.allowUnfree = true;
           };
-          gamescope = pin-9e1f33.gamescope;
+          #gamescope = pin-9e1f33.gamescope;
         })
-	(final: prev: {
-          wlroots_0_20 = prev.wlroots.overrideAttrs (old: {
-            version = "0.20.0";
-            src = prev.fetchFromGitLab {
-              domain = "gitlab.freedesktop.org";
-              owner = "wlroots";
-              repo = "wlroots";
-              rev = "0166fd9eb778761295ea14fdff0515ada1a1cb17";
-              sha256 = "sha256-2FK6FGRpgf/YYqwJST0LVA/pnNRSUDrfrrp6mSwA0Fk=";
-            };
+        (final: prev: {
+          xdg-desktop-portal-wlr = prev.xdg-desktop-portal-wlr.overrideAttrs (old: {
+            patches = [ ./patches/00-remote-desktop.patch ];
+            buildInputs = old.buildInputs ++ [prev.libxkbcommon];
+            nativeBuildInputs = old.nativeBuildInputs ++ [prev.libxkbcommon];
           });
-	})
-	(final: prev: {
-	  sway-unwrapped = prev.sway-unwrapped.overrideAttrs (oldAttrs: {
-            src = prev.fetchFromGitHub {
-              owner = "swaywm";
-              repo = "sway";
-              rev = "73c244fb4807a29c6599d42c15e8a8759225b2d6";
-              sha256 = "sha256-P2w1oRVUNBWajt8jZOxPXvBE29urbrhtORy+lfYqnF8=";
-            };
-	    buildInputs = (prev.lib.filter (dep: dep.name != "wlroots") oldAttrs.buildInputs) ++ [ prev.wlroots_0_20 ];
-          });
-	})
+        })
+	#(final: prev: {
+        #  wlroots_0_20 = prev.wlroots.overrideAttrs (old: {
+        #    version = "0.20.0";
+        #    src = prev.fetchFromGitLab {
+        #      domain = "gitlab.freedesktop.org";
+        #      owner = "wlroots";
+        #      repo = "wlroots";
+        #      rev = "0166fd9eb778761295ea14fdff0515ada1a1cb17";
+        #      sha256 = "sha256-2FK6FGRpgf/YYqwJST0LVA/pnNRSUDrfrrp6mSwA0Fk=";
+        #    };
+        #  });
+	#})
+	#(final: prev: {
+	#  sway-unwrapped = prev.sway-unwrapped.overrideAttrs (oldAttrs: {
+        #    src = prev.fetchFromGitHub {
+        #      owner = "swaywm";
+        #      repo = "sway";
+        #      rev = "73c244fb4807a29c6599d42c15e8a8759225b2d6";
+        #      sha256 = "sha256-P2w1oRVUNBWajt8jZOxPXvBE29urbrhtORy+lfYqnF8=";
+        #    };
+	#    buildInputs = (prev.lib.filter (dep: dep.name != "wlroots") oldAttrs.buildInputs) ++ [ prev.wlroots_0_20 ];
+        #  });
+	#})
       ];
     in {
       thinkprime = nixpkgs.lib.nixosSystem {

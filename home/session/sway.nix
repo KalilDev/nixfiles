@@ -99,6 +99,7 @@ esac
             always = true;
           } 
           { command = "${clamshell-startup-script}"; } 
+          { command = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"; }
       ];
       input = {
         "2:7:SynPS/2_Synaptics_TouchPad" = {

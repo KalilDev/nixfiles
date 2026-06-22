@@ -2,7 +2,7 @@
   # Enforce the platform theme and style override
   qt = {
     enable = true;
-    platformTheme = "adwaita";
+    platformTheme.name = "adwaita";
     style.name = "adwaita-dark";
   };
 }

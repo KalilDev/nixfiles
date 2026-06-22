@@ -9,7 +9,6 @@
         ./firewall/kde_connect.nix
         ./firewall/tools.nix
         ./firewall/qbittorrent.nix
-        ./hardware/adb.nix
         ./hardware/bluetooth.nix
         ./hardware/libinput.nix
         ./hardware/networkmanager.nix

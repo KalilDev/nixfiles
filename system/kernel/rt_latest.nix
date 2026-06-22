@@ -3,11 +3,18 @@
     realtime = {
       inheritParentConfig = true;
       configuration = {
-        boot.kernelParams = [  ];
-        boot.kernelPackages = pkgs.linuxPackages-rt_latest;
+        boot.kernelPatches = [ {
+          name = "rt-config";
+          patch = null;
+          structuredExtraConfig = with lib.kernel; {
+            PREEMPT_RT = yes;
+            DRM_I915_GVT_KVMGT = lib.mkForce lib.kernel.unset; 
+            DRM_I915_GVT = lib.mkForce lib.kernel.unset; 
+          };
+        }
+        ];
       };
     };
   };
-  boot.kernelParams = lib.mkIf (config.specialisation != {}) [  ];
-  boot.kernelPackages = lib.mkIf (config.specialisation != {}) pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 }

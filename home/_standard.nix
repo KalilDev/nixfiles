@@ -26,11 +26,8 @@ in {
     ./software/waydroid.nix
     ./ui/gtk.nix
     ./ui/qt.nix
+    ./desktop-entries.nix
   ];
-  custom.waydroid-desktops = {
-    hide = true;
-    whitelist = ["com.songsterr"];
-  };
   home.packages = with pkgs; [  
     (pkgs.writeShellScriptBin "nix-shell" ''
     has_run=0
@@ -73,6 +70,8 @@ in {
     jetbrains.jdk
     jetbrains.clion
     jetbrains.gateway
+    # Gtk-launch
+    gtk3
     # (pkgs.upstream-de09e1.jetbrains.gateway.overrideAttrs {
     #   extraBuildInputs = [ glib ];
     # })
@@ -80,9 +79,9 @@ in {
     jetbrains.rust-rover
     jetbrains.goland
     jetbrains.datagrip
-    jetbrains.pycharm-professional
+    jetbrains.pycharm
     scrcpy
-    stremio
+    stremio-linux-shell
     jq
     loupe
     google-chrome

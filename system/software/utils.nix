@@ -7,6 +7,7 @@
   # $ nix search wget
   environment.systemPackages = (with pkgs; [
     file
+    android-tools
     unzip
     zip
     unrar
