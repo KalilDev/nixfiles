@@ -157,7 +157,8 @@
         "musnix": "musnix",
         "nixpkgs": "nixpkgs",
         "nixpkgs-9e1f33": "nixpkgs-9e1f33",
-        "nixpkgs-stable": "nixpkgs-stable"
+        "nixpkgs-stable": "nixpkgs-stable",
+        "wlr-hdr": "wlr-hdr"
       }
     },
     "systems": {
@@ -172,6 +173,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "wlr-hdr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780764746,
+        "narHash": "sha256-fNA5/VBzKx7qKHJIsvWsFJckV5m7h8iP7haNlHzjCY4=",
+        "owner": "njdom24",
+        "repo": "wlr-hdr-cal",
+        "rev": "049aaa27daa675b315dced30d92f2f6566fd1e19",
+        "type": "github"
+      },
+      "original": {
+        "owner": "njdom24",
+        "repo": "wlr-hdr-cal",
         "type": "github"
       }
     }

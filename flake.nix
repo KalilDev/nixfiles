@@ -17,10 +17,17 @@
       url = "github:musnix/musnix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    wlr-hdr = {
+      url = "github:njdom24/wlr-hdr-cal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, agenix, ... }: {
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, agenix, wlr-hdr, ... }: {
     nixosConfigurations = let
       overlays = [
+        (final: prev: {
+          wlr-hdr-cal = wlr-hdr.wlr-hdr-cal.packages.${prev.stdenv.hostPlatform.system}.default;
+        })
         (final: prev: {
           jetbrains = prev.jetbrains // {
             gateway = let

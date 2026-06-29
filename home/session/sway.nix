@@ -5,6 +5,7 @@
   imports = [
     ./sway/flameshot.nix
     ./sway/waybar.nix
+    ./sway/hdr.nix
   ];
   home.packages = with pkgs; [
     swaybg

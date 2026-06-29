@@ -6,4 +6,5 @@ let
   systems = [ thinkprime ];
 in {
   "cloudflare_tunnel.age".publicKeys = systems ++ [pedro];
+  "spotify_password.age".publicKeys = [pedro];
 }

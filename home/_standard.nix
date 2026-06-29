@@ -24,6 +24,7 @@ in {
     ./session/hyprland.nix
     ./software/alacritty.nix
     ./software/waydroid.nix
+    ./software/spotifyd.nix
     ./ui/gtk.nix
     ./ui/qt.nix
     ./desktop-entries.nix
