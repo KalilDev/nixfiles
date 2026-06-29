@@ -32,6 +32,25 @@
     #keyFileTimeout = 15;
   };
   services.fwupd.enable = true;
+  boot.initrd.keyfile-ask-password-agent = {
+    enable = true;
+    replies."wd_blue_luks" = {
+      key-file = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
+      key-file-offset = 15376280576;
+      key-file-size = 32;
+      poll-interval = 1;
+    };  
+  };
+  services.keyfile-ask-password-agent = {
+    enable = true;
+    replies."wd_blue_luks" = {
+      key-file = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
+      key-file-offset = 15376280576;
+      key-file-size = 32;
+      poll-interval = 1;
+    };  
+  };
+
 
 
   # workaround for t14 backlight  

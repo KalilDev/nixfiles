@@ -1,78 +1,97 @@
-{pkgs, ...}: {
-  boot.initrd.availableKernelModules = [ "usb_storage" "uas" "xhci_pci" "ehci_pci" ];
-  boot.initrd.systemd = {
-  extraBin = {
-    bash = "${pkgs.bash}/bin/bash";
-    coreutils = "${pkgs.coreutils}/bin/coreutils";
-    grep = "${pkgs.gnugrep}/bin/grep";
-    socat = "${pkgs.socat}/bin/socat";
-    inotifywait = "${pkgs.inotify-tools}/bin/inotifywait";
-    systemd-ask-password-usb-keyfile-agent = pkgs.writeShellScript "usb-keyfile-agent-run" ''
+{pkgs, lib, config, ...}: let
+  initrd = config.boot.initrd.keyfile-ask-password-agent;
+  system = config.services.keyfile-ask-password-agent;
+  config_type = lib.types.attrsOf (lib.types.submodule {
+    options = {
+      key-file = lib.mkOption {type = lib.types.str; description = "A path to the keyfile";};
+      key-file-offset = lib.mkOption {type = lib.types.int; description = "The offset into the keyfile"; default = 0;};
+      key-file-size = lib.mkOption {type = lib.types.nullOr lib.types.int; description = "The size of the keyfile"; default = null;};
+      poll-interval = lib.mkOption {type = lib.types.int; description = "The interval in seconds between polls"; default = 1;};
+    };
+  });
+  mkAgentScriptName = (name: "systemd-${name}-keyfile-agent");
+  mkAgentScript = (message-fragment: script-name: {key-file-size, key-file, key-file-offset, poll-interval}: pkgs.writeShellScript "${script-name}" ''
         set -euo pipefail
 
         ASK_DIR="/run/systemd/ask-password"
-        USB_DEV="/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0"
-        OFFSET=15376280576
-        SIZE=32
-        POLL_TIMEOUT=1
 
         handle_unlock() {
           for f in "$ASK_DIR"/ask.*; do
             [ -e "$f" ] || continue
 
             local socket message
-            socket=$(grep '^Socket=' "$f" | cut -d= -f2)
-            message=$(grep '^Id=' "$f" | cut -d= -f2)
+            socket=$(${pkgs.gnugrep}/bin/grep '^Socket=' "$f" | ${pkgs.coreutils}/bin/cut -d= -f2)
+            message=$(${pkgs.gnugrep}/bin/grep '^Message=' "$f" | ${pkgs.coreutils}/bin/cut -d= -f2)
 
-            if [[ "$message" == *"wd_blue_luks"* && -b "$USB_DEV" && -n "$socket" ]]; then
-              echo "USB key detected! Automatically unlocking volume..."
-              (echo -n "+"; dd if="$USB_DEV" bs=1 skip="$OFFSET" count="$SIZE" status=none) | socat - UNIX-SENDTO:"$socket"
+            if [[ "$message" == *"${message-fragment}"* && -b "${key-file}" && -n "$socket" ]]; then
+              echo "Candidate keyfile ${key-file} matched! Replying..."
+              (echo -n "+"; dd if="${key-file}" bs=1 skip="${builtins.toString key-file-offset}"${if (builtins.isNull key-file-size) then "" else " count=\"${builtins.toString key-file-size}\""} status=none) | ${pkgs.socat}/bin/socat - UNIX-SENDTO:"$socket"
               return 0
             fi
           done
           return 1
         }
 
-        # Main persistent daemon loop
         while true; do
-          # 1. Attempt to unlock immediately if the prompt and device already exist
           if handle_unlock; then
-            # Sleep briefly to avoid hammering if systemd takes a second to clean up the ask file
-            sleep $POLL_TIMEOUT
+            sleep ${builtins.toString poll-interval}
           fi
 
-          # 2. Block until either a new ask file appears OR 2 seconds pass
-          # The 2-second timeout ensures we regularly poll for a hotplugged USB block device
-          inotifywait -e close_write,moved_to "$ASK_DIR" --timeout $POLL_TIMEOUT >/dev/null 2>&1 || true
+          ${pkgs.inotify-tools}/bin/inotifywait -e close_write,moved_to "$ASK_DIR" --timeout ${builtins.toString poll-interval} >/dev/null 2>&1 || true
         done
-      '';
-  };
-
-  services."systemd-ask-password-usb-keyfile" = {
-    description = "Automatic USB Keyfile Password Agent";
-    documentation = [ "man:systemd-ask-password-console.service(8)" ];
-    unitConfig.DefaultDependencies = false;
-    conflicts = [ "emergency.service" "shutdown.target" "initrd-switch-root.target" ];
-    before = [ "emergency.service" "shutdown.target" "initrd-switch-root.target" ];
-    
-    serviceConfig = {
-      Environment = "PATH=/bin:/usr/bin";
-      Type = "simple";
-      ExecStart = "/bin/systemd-ask-password-usb-keyfile-agent";
-    };
-  };
-  paths."systemd-ask-password-usb-keyfile" = {
-    description = "Watch for password requests to inject USB keyfile";
+      '');
+  mkAgentPathUnit = (message-fragment: {
+    description = "Watch for password requests to inject Keyfile ${message-fragment}";
     documentation = [ "http://www.freedesktop.org/wiki/Software/systemd/PasswordAgents"];
     unitConfig.DefaultDependencies = false;
     conflicts = [ "shutdown.target" "emergency.service" ];
     before = [ "paths.target" "shutdown.target" "cryptsetup.target" "emergency.service" ];
-    wantedBy = ["sysinit.target"]; 
+    wantedBy = ["sysinit.target"];
     pathConfig = {
       DirectoryNotEmpty = "/run/systemd/ask-password";
       MakeDirectory = true;
     };
-  };
-};
+  }); 
+  mkAgentServiceUnit = (message-fragment: options: let
+   scriptName = (mkAgentScriptName message-fragment);
+  in {
+    description = "Automatic ${message-fragment} Keyfile Password Agent";
+    documentation = [ "man:systemd-ask-password-console.service(8)" ];
+    unitConfig.DefaultDependencies = false;
+    conflicts = [ "emergency.service" "shutdown.target" "initrd-switch-root.target" ];
+    before = [ "emergency.service" "shutdown.target" "initrd-switch-root.target" ];
 
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${mkAgentScript message-fragment scriptName options}";
+    };
+  });
+in {
+  options.boot.initrd.keyfile-ask-password-agent = {
+    enable = lib.mkEnableOption "Enable keyfile systemd-ask-password agent";
+    replies = lib.mkOption {
+      type = config_type;
+      default = {};
+      description = "A key value pair from a message fragment to a agent configuration";
+    };
+  };
+  options.services.keyfile-ask-password-agent = {
+    enable = lib.mkEnableOption "Enable keyfile systemd-ask-password agent";
+    replies = lib.mkOption {
+      type = config_type;
+      default = {};
+      description = "A key value pair from a message fragment to a agent configuration";
+    };
+  };
+  config.boot.initrd = lib.mkIf initrd.enable {
+    availableKernelModules = [ "usb_storage" "uas" "xhci_pci" "ehci_pci" ];
+    systemd = {
+      services = lib.mapAttrs' (message-fragment: options: lib.nameValuePair "systemd-ask-password-keyfile@${message-fragment}" (mkAgentServiceUnit message-fragment options)) initrd.replies;
+      paths = lib.mapAttrs' (message-fragment: options: lib.nameValuePair "systemd-ask-password-keyfile@${message-fragment}" (mkAgentPathUnit message-fragment)) initrd.replies;
+    };
+  };
+  config.systemd = lib.mkIf system.enable {
+    services = lib.mapAttrs' (message-fragment: options: lib.nameValuePair "systemd-ask-password-keyfile@${message-fragment}" (mkAgentServiceUnit message-fragment options)) system.replies;
+    paths = lib.mapAttrs' (message-fragment: options: lib.nameValuePair "systemd-ask-password-keyfile@${message-fragment}" (mkAgentPathUnit message-fragment)) system.replies;
+  };
 }
