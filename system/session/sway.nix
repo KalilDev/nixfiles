@@ -1,9 +1,4 @@
 {config, lib, pkgs, nixpkgs, ...}: {
-  # Sway
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-  };
   security.polkit.enable = true;
   security.rtkit.enable = true;
   programs.dconf.enable = true;
@@ -16,23 +11,24 @@
     enable = true;
     enableSSHSupport = true;
   };
-  xdg.portal = {
-    enable = true;
-    config.common.default = ["wlr"];
-    extraPortals = [
-      pkgs.xdg-desktop-portal-wlr
-    ];
-  };
-  environment.systemPackages = (with pkgs; [
-    grim
-    slurp
-    wl-clipboard
-    mako
-    alacritty
-    rofi
-  ]);
-
+  security.pam.services.swaylock = {};
   services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.gdm.enableGnomeKeyring = true;
+  security.pam.services.gdm-password.enableGnomeKeyring = true; # If you use GDM
+  security.pam.loginLimits = [
+    { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
+  ];
+  environment.pathsToLink = [ "/share/applications" "/share/xdg-desktop-portal" ];
+  services.displayManager.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.displayManager.gdm.debug = true;
+  services.displayManager.defaultSession = "sway";
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "pedro";
+  services.displayManager.sessionPackages = [pkgs.sway];
+  programs.sway.enable = true;
+  programs.sway.package = null;
   systemd.user.services.sway-polkit-gnome-authentication-agent = {
     description = "polkit-gnome-authentication-agent for sway session";
     wantedBy = ["sway-session.target"];

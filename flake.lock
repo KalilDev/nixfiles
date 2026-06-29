@@ -23,6 +23,26 @@
         "type": "github"
       }
     },
+    "azzipkgs": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1782479582,
+        "narHash": "sha256-23gcEkGOXy4rgbu3SzrqX3dWZQCJfCZ7lTkAFJQUzSM=",
+        "owner": "fazzi",
+        "repo": "azzipkgs",
+        "rev": "9a967ff809ebe542a8c322014d78b91ada89ffdd",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "fazzi",
+        "repo": "azzipkgs",
+        "type": "gitlab"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -153,6 +173,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "azzipkgs": "azzipkgs",
         "home-manager": "home-manager_2",
         "musnix": "musnix",
         "nixpkgs": "nixpkgs",

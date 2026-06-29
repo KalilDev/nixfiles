@@ -18,6 +18,7 @@ let
     };
   };
 in {
+  age.secrets.spotify_password.file = ../secrets/spotify_password.age;
   imports = [
     ./software/easyeffects.nix
     ./session/sway.nix
@@ -156,13 +157,7 @@ in {
     package = pkgs.gitFull;
   };
   home.stateVersion = "24.11";
-  xdg.portal = {
-    enable = true;
-    config.common.default = ["wlr"];
-    extraPortals = [
-      pkgs.xdg-desktop-portal-wlr
-    ];
-  };
+  xdg.portal.enable = true;
   programs.zsh = {
     enable = true;
     history = {

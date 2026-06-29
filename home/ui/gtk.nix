@@ -24,6 +24,11 @@
       AdwStyleManager.color-scheme = "prefer-dark";
     };
   };
+  services.gnome-keyring.enable = true;
+  xdg.portal.config.common = {
+    default = [ "gtk" ];
+    "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+  };
   xdg.portal.extraPortals = [
       pkgs.xdg-desktop-portal-gtk
   ];

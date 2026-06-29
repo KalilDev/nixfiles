@@ -5,9 +5,8 @@
      {
        global = {
          username = "kalilgamer0";
-         password_cmd = "cat ${config.age.secrets.cloudflare_tunnel.path}";
+         password_cmd = "cat ${config.age.secrets.spotify_password.path}";
        };
-     }
-   ;
- }
+     };
+ };
 }

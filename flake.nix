@@ -21,12 +21,18 @@
       url = "github:njdom24/wlr-hdr-cal";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    azzipkgs = {
+      url = "gitlab:fazzi/azzipkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs@{ nixpkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, agenix, wlr-hdr, ... }: {
+  outputs = inputs@{ nixpkgs, azzipkgs, nixpkgs-stable, musnix, home-manager, nixpkgs-9e1f33, agenix, wlr-hdr, ... }: {
     nixosConfigurations = let
       overlays = [
-        (final: prev: {
-          wlr-hdr-cal = wlr-hdr.wlr-hdr-cal.packages.${prev.stdenv.hostPlatform.system}.default;
+        (final: prev: let sys = prev.stdenv.hostPlatform.system; in {
+          stremio-linux-shell = azzipkgs.packages.${sys}.stremio-linux-shell;
+          wlr-hdr-cal = wlr-hdr.packages.${sys}.default;
+          agenix = agenix.packages.${sys}.default;
         })
         (final: prev: {
           jetbrains = prev.jetbrains // {

@@ -13,6 +13,7 @@
       ./virtualisation/waydroid.nix
       ./_standard.nix
       ./cloudflare/thinkprime.nix
+      ./luks_unlock.nix
   ];
 
   age.secrets.cloudflare_tunnel.file = ../secrets/cloudflare_tunnel.age;
@@ -26,10 +27,12 @@
     device = "/dev/disk/by-uuid/052a7220-479f-4c53-b6d4-80e3dcaa6c24";
     preLVM = true;
     #keyFile = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
-    #keyFileOffset = 15376280064;
+    #keyFileOffset = 15376280576;
     #keyFileSize = 4096;
     #keyFileTimeout = 15;
   };
+  services.fwupd.enable = true;
+
 
   # workaround for t14 backlight  
   services.udev.extraRules = ''

@@ -12,7 +12,14 @@
     playerctl
     brightnessctl
     kanshi
+    slurp
+    wl-clipboard
+    mako
   ];
+  xdg.portal.config.sway = {
+    default = ["wlr" "gtk"];
+  };
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
   xdg.configFile."kanshi/kanshi.conf".text = "";
   systemd.user.services.kanshi-sway = {
     Unit = {

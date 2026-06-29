@@ -19,7 +19,6 @@
         ./session/sway.nix
         ./session/hyprland.nix
         ./software/firefox.nix
-        ./software/greetd.nix
         ./software/lutris.nix
         ./software/steam.nix
         ./software/tailscale.nix
@@ -28,4 +27,6 @@
         ./virtualisation/docker.nix
         ./virtualisation/virtd.nix
     ];
+  
+  environment.systemPackages = [ pkgs.agenix ];
 }
