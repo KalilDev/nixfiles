@@ -86,6 +86,13 @@ in {
   config.boot.initrd = lib.mkIf initrd.enable {
     availableKernelModules = [ "usb_storage" "uas" "xhci_pci" "ehci_pci" ];
     systemd = {
+      extraBin = {
+        grep = "${pkgs.gnugrep}/bin/grep";
+        socat = "${pkgs.socat}/bin/socat";
+        inotifywait = "${pkgs.inotify-tools}/bin/inotifywait";
+      } // (lib.mapAttrs' (message-fragment: options: let
+        scriptName = (mkAgentScriptName message-fragment);
+      in (lib.nameValuePair scriptName (mkAgentScript message-fragment scriptName options))) initrd.replies);
       services = lib.mapAttrs' (message-fragment: options: lib.nameValuePair "systemd-ask-password-keyfile@${message-fragment}" (mkAgentServiceUnit message-fragment options)) initrd.replies;
       paths = lib.mapAttrs' (message-fragment: options: lib.nameValuePair "systemd-ask-password-keyfile@${message-fragment}" (mkAgentPathUnit message-fragment)) initrd.replies;
     };
