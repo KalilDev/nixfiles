@@ -26,28 +26,33 @@
   boot.initrd.luks.devices."wd_blue_luks" = {
     device = "/dev/disk/by-uuid/052a7220-479f-4c53-b6d4-80e3dcaa6c24";
     preLVM = true;
-    #keyFile = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
-    #keyFileOffset = 15376280576;
-    #keyFileSize = 4096;
-    #keyFileTimeout = 15;
   };
-  services.fwupd.enable = true;
+  boot.initrd.systemd.extraBin = {
+     age = "${pkgs.age}/bin/age";
+     decrypt-key-with-age = pkgs.writeShellScript "decrypt-key-with-age" "(printf \"AGE-SECRET-KEY-PQ-\"; cat) | ${pkgs.age}/bin/age --decrypt -i - -o - /etc/keychain_pass.age; echo \"\"";
+  };
+  boot.initrd.systemd.contents."/etc/keychain_pass.age".source = ../secrets/keychain_pass.age;
   boot.initrd.keyfile-ask-password-agent = {
     enable = true;
     replies."wd_blue_luks" = {
       key-file = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
       key-file-offset = 15376280576;
-      key-file-size = 32;
+      key-file-size = 60;
       poll-interval = 1;
+      chain-with = "/bin/decrypt-key-with-age";
     };  
   };
+  services.fwupd.enable = true;
   services.keyfile-ask-password-agent = {
     enable = true;
-    replies."wd_blue_luks" = {
+    replies."wd_blue_luks" = let
+      chain = pkgs.writeShellScript "decrypt-key-with-age" "(printf \"AGE-SECRET-KEY-PQ-\"; cat) | ${pkgs.age}/bin/age --decrypt -i - -o - ${../secrets/keychain_pass.age}; echo \"\"";
+    in {
       key-file = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
       key-file-offset = 15376280576;
-      key-file-size = 32;
+      key-file-size = 60;
       poll-interval = 1;
+      chain-with = "${chain}";
     };  
   };
 
