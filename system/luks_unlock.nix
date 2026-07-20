@@ -27,6 +27,7 @@
             if [[ "$message" == *"${message-fragment}"* && -b "${key-file}" && -n "$socket" ]]; then
               echo "Candidate keyfile ${key-file} matched! Replying..."
               (echo -n "+"; dd if="${key-file}" bs=1 skip="${builtins.toString key-file-offset}"${if (builtins.isNull key-file-size) then "" else " count=\"${builtins.toString key-file-size}\""} status=none${if (builtins.isNull chain-with) then "" else " | ${chain-with}"}) | ${pkgs.coreutils}/bin/printf "%s" $(${pkgs.coreutils}/bin/cat) | ${pkgs.socat}/bin/socat - UNIX-SENDTO:"$socket"
+              ${pkgs.coreutils}/bin/rm "$f"
               return 0
             fi
           done

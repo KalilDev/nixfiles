@@ -3,15 +3,8 @@
     realtime = {
       inheritParentConfig = true;
       configuration = {
-        boot.kernelPatches = [ {
-          name = "rt-config";
-          patch = null;
-          structuredExtraConfig = with lib.kernel; {
-            PREEMPT_RT = yes;
-            DRM_I915_GVT_KVMGT = lib.mkForce lib.kernel.unset; 
-            DRM_I915_GVT = lib.mkForce lib.kernel.unset; 
-          };
-        }
+       system.requiredKernelConfig = [
+         (config.lib.kernelConfig.isEnabled "PREEMPT_RT")
         ];
       };
     };

@@ -4,4 +4,5 @@
   boot.loader.systemd-boot.consoleMode = "auto";
   boot.loader.systemd-boot.memtest86.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 0;
 }

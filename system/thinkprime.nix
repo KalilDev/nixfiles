@@ -11,6 +11,7 @@
       ./boot/plymouth.nix
       ./kernel/rt_latest.nix
       ./virtualisation/waydroid.nix
+      ./virtualisation/distrobox.nix
       ./_standard.nix
       ./cloudflare/thinkprime.nix
       ./luks_unlock.nix
@@ -21,6 +22,7 @@
   hardware.firmware = [ pkgs.linux-firmware ];
   boot.initrd.availableKernelModules = [ "nvme" "ehci_pci" "xhci_pci" "usbhid" "uas" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" "dm_mod" "cryptd" "nvme" ];
   boot.kernelModules = [ "dm-snapshot"  "thinkpad-acpi" "kvm-amd" ];
+  
   boot.kernelParams = [ "thinkpad_acpi.fan_control=1" "boot.shell_on_fail" ];
   boot.resumeDevice = "/dev/vg_wd_blue_luks/swap";
   boot.initrd.luks.devices."wd_blue_luks" = {
@@ -43,20 +45,6 @@
     };  
   };
   services.fwupd.enable = true;
-  services.keyfile-ask-password-agent = {
-    enable = true;
-    replies."wd_blue_luks" = let
-      chain = pkgs.writeShellScript "decrypt-key-with-age" "(printf \"AGE-SECRET-KEY-PQ-\"; cat) | ${pkgs.age}/bin/age --decrypt -i - -o - ${../secrets/keychain_pass.age}; echo \"\"";
-    in {
-      key-file = "/dev/disk/by-id/usb-SanDisk_Ultra_4C531001490317105334-0:0";
-      key-file-offset = 15376280576;
-      key-file-size = 60;
-      poll-interval = 1;
-      chain-with = "${chain}";
-    };  
-  };
-
-
 
   # workaround for t14 backlight  
   services.udev.extraRules = ''

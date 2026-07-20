@@ -72,6 +72,7 @@ in {
     jetbrains.jdk
     jetbrains.clion
     jetbrains.gateway
+    gnumake
     # Gtk-launch
     gtk3
     # (pkgs.upstream-de09e1.jetbrains.gateway.overrideAttrs {

@@ -2,12 +2,16 @@
   home.packages = [pkgs.wlr-hdr-cal];
   xdg.configFile."wlr-hdr-cal/config".text = ''
 [[monitors]]
-name = "GSM 30566"
+name = "DP-5"
+multiplier = 1.0
 values = [
   [0, 0],
-  [100, 60],
-  [200, 140],
+  [100, 70],
+  [175, 130],
+  [200, 165],
+  [400, 400],
   [10000, 10000]
 ]
+
 '';
 }
