@@ -1,8 +1,11 @@
 {config, lib, pkgs, ...}: {
   imports = [ ./edid_patch.nix ];
-  services.runtime-override-edid."6d1e:7766" = {
-    edid = "./edids/lg_ultragear_dp.bin";
-    connector = "DP";
+  services.runtime-override-edid = {
+    enable = true;
+    displays."6d1e:7766" = {
+      edid = "${./edids/lg_ultragear_dp.bin}";
+      connector = "DP";
+    };
   };
   #hardware.display.edid = let
   #patched_edids = pkgs.stdenv.mkDerivation {
